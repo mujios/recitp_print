@@ -50,7 +50,7 @@ const defaultItem: ReceiptItem = {
 const App = () => {
   const printRef = useRef<HTMLDivElement>(null);
   const [imgError, setImgError] = useState(false);
-  
+
   const [receipt, setReceipt] = useState<ReceiptData>({
     addressLine1: "House No. 45D Miran Shah Road near",
     addressLine2: "Spar Supermarket",
@@ -186,7 +186,7 @@ const App = () => {
   const updateItem = (id: number, field: keyof ReceiptItem, value: string) => {
     setReceipt(prev => ({
       ...prev,
-      items: prev.items.map(item => 
+      items: prev.items.map(item =>
         item.id === id ? { ...item, [field]: value } : item
       )
     }));
@@ -446,13 +446,13 @@ const App = () => {
           {/* Editor Form */}
           <div className="bg-white rounded-lg shadow-md p-6 max-h-[85vh] overflow-y-auto">
             <h2 className="text-lg font-semibold mb-4 text-gray-700">Edit Receipt Details</h2>
-            
+
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Address Line 1</Label>
                 <Input value={receipt.addressLine1} onChange={(e) => updateField('addressLine1', e.target.value)} />
               </div>
-              
+
               <div className="space-y-2">
                 <Label>Address Line 2</Label>
                 <Input value={receipt.addressLine2} onChange={(e) => updateField('addressLine2', e.target.value)} />
@@ -508,7 +508,7 @@ const App = () => {
                     <Plus size={14} /> Add Item
                   </Button>
                 </div>
-                
+
                 <div className="space-y-3">
                   {receipt.items.map((item, index) => (
                     <div key={item.id} className="bg-gray-50 p-3 rounded border">
@@ -575,9 +575,9 @@ const App = () => {
             <div ref={printRef} className="receipt-paper">
               <div className="logo-container">
                 {!imgError ? (
-                  <img 
-                    src="/logo.png" 
-                    alt="mini mo's PLAY CAFE" 
+                  <img
+                    src="/logos.png"
+                    alt="mini mo's PLAY CAFE"
                     className="logo-img"
                     onError={() => setImgError(true)}
                   />
@@ -585,20 +585,20 @@ const App = () => {
                   <div className="fallback-title">mInI mo's</div>
                 )}
               </div>
-              
+
               <div className="tagline">---------PLAY CAFE----------</div>
-              
+
               <div className="address">
-                {receipt.addressLine1}<br/>
+                {receipt.addressLine1}<br />
                 {receipt.addressLine2}
               </div>
 
               <div className="bill-type-container">
                 <div className="bill-type-box">{receipt.billType}</div>
               </div>
-              
+
               <div className="dine-inn-container">{receipt.diningType}</div>
-              
+
               <div className="token-wrapper">
                 <div className="token-box">Token No: {receipt.tokenNo}</div>
               </div>
@@ -643,11 +643,11 @@ const App = () => {
                       <td className="desc-cell">
                         {item.line1}
                         {item.line2 && <br />}
-                        {item.line2 && <span style={{fontSize: '9px'}}>{item.line2}</span>}
+                        {item.line2 && <span style={{ fontSize: '9px' }}>{item.line2}</span>}
                       </td>
                       <td className="qty-cell">
-                        {item.qty}<br/>
-                        <span style={{fontSize: '9px'}}>{item.qtyUnit}</span>
+                        {item.qty}<br />
+                        <span style={{ fontSize: '9px' }}>{item.qtyUnit}</span>
                       </td>
                       <td className="rate-cell">{item.rate}</td>
                       <td className="amt-cell">{item.amount}</td>
@@ -659,27 +659,27 @@ const App = () => {
               <div className="dashed-separator"></div>
 
               <div className="totals-flex">
-                <div style={{width: '35%', paddingLeft: '5px'}}>No Of Items: {receipt.noOfItems}</div>
-                <div style={{width: '15%', paddingLeft: '120px', fontWeight: 'bold'}}>Total</div>
-                <div style={{width: '50%'}}></div>
+                <div style={{ width: '35%', paddingLeft: '5px' }}>No Of Items: {receipt.noOfItems}</div>
+                <div style={{ width: '15%', paddingLeft: '120px', fontWeight: 'bold' }}>Total</div>
+                <div style={{ width: '50%' }}></div>
               </div>
-              
+
               <div className="totals-flex">
-                <div style={{width: '35%'}}></div>
-                <div style={{width: '15%', paddingLeft: '120px'}}>Qty:</div>
-                <div style={{width: '50%', textAlign: 'right', paddingRight: '5px'}}>{receipt.totalAmount}</div>
+                <div style={{ width: '35%' }}></div>
+                <div style={{ width: '15%', paddingLeft: '120px' }}>Qty:</div>
+                <div style={{ width: '50%', textAlign: 'right', paddingRight: '5px' }}>{receipt.totalAmount}</div>
               </div>
-              
-              <div className="totals-flex" style={{marginBottom: '5px'}}>
-                <div style={{width: '35%'}}></div>
-                <div style={{width: '15%', paddingLeft: '120px'}}>{receipt.totalQty}</div>
-                <div style={{width: '50%'}}></div>
+
+              <div className="totals-flex" style={{ marginBottom: '5px' }}>
+                <div style={{ width: '35%' }}></div>
+                <div style={{ width: '15%', paddingLeft: '120px' }}>{receipt.totalQty}</div>
+                <div style={{ width: '50%' }}></div>
               </div>
 
               <div className="grand-total-box">
                 <div className="grand-total-inner">
-                  <span style={{paddingLeft: '20px'}}>Total :</span>
-                  <span style={{marginLeft: 'auto', paddingRight: '5px'}}>{receipt.totalAmount}</span>
+                  <span style={{ paddingLeft: '20px' }}>Total :</span>
+                  <span style={{ marginLeft: 'auto', paddingRight: '5px' }}>{receipt.totalAmount}</span>
                 </div>
               </div>
 
@@ -689,15 +689,15 @@ const App = () => {
 
               <div className="print-info-box">
                 <span>Print Date: {receipt.printDate}</span>
-                <span>Print Time: {receipt.printTime} <span style={{fontSize: '9px', textTransform:'lowercase'}}>{receipt.printTimeAmPm}</span></span>
+                <span>Print Time: {receipt.printTime} <span style={{ fontSize: '9px', textTransform: 'lowercase' }}>{receipt.printTimeAmPm}</span></span>
               </div>
 
               <div className="powered-by">
                 <span>Powered by</span>
                 <span className="cis-logo">
-                  <span style={{fontSize:'14px'}}>☁</span> cis<span style={{color: '#444'}}>e</span>POS
+                  <span style={{ fontSize: '14px' }}>☁</span> cis<span style={{ color: '#444' }}>e</span>POS
                 </span>
-                <span style={{margin: '0 5px'}}><Link size={10} /></span>
+                <span style={{ margin: '0 5px' }}><Link size={10} /></span>
                 <span>cisapos.com</span>
               </div>
             </div>
