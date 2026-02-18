@@ -93,13 +93,28 @@ const App = () => {
           <head>
             <title>Receipt</title>
             <style>
-              @page { size: 80mm auto; margin: 0; }
-              body { margin: 0; padding: 0; background: white; }
               @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap');
               @import url('https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap');
               
+              @page { size: 80mm auto; margin: 0; }
+              * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+              
+              html, body {
+                width: 380px;
+                margin: 0;
+                padding: 0;
+                background: white;
+              }
+              
+              body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+              }
+              
               .receipt-paper {
-                font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
                 width: 380px;
                 background-color: #fff;
                 padding: 20px 25px 10px 25px;
@@ -107,22 +122,25 @@ const App = () => {
                 font-size: 11px;
                 line-height: 1.2;
                 margin: 0 auto;
+                box-shadow: none;
+                font-weight: 500;
               }
+              
               .logo-container { display: flex; justify-content: center; margin-bottom: 2px; width: 100%; overflow: hidden; }
               .logo-img { width: 200px; height: auto; filter: grayscale(100%) contrast(150%); mix-blend-mode: multiply; display: block; }
-              .fallback-title { font-family: 'Rubik Bubbles', cursive; font-size: 38px; text-align: center; color: #000; line-height: 1; }
+              .fallback-title { font-family: 'Rubik Bubbles', cursive !important; font-size: 38px; text-align: center; color: #000; line-height: 1; }
               .tagline { font-family: monospace; font-size: 10px; text-align: center; letter-spacing: 3px; margin-bottom: 5px; }
-              .address { text-align: center; font-size: 13px; font-weight: 800; margin-bottom: 5px; line-height: 1.1; padding: 0 15px; }
+              .address { text-align: center; font-size: 13px; font-weight: 800; margin-bottom: 5px; line-height: 1.1; padding: 0 15px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .bill-type-container { padding: 0 5px 2px 5px; margin-bottom: 2px; }
-              .bill-type-box { border: 1px solid #000; text-align: center; padding: 1px 0; font-size: 11px; font-weight: 600; }
-              .dine-inn-container { border-top: 1px solid #000; border-bottom: 1px solid #000; text-align: center; margin: 2px 0; padding: 1px 0; font-size: 11px; }
+              .bill-type-box { border: 1px solid #000; text-align: center; padding: 1px 0; font-size: 11px; font-weight: 600; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+              .dine-inn-container { border-top: 1px solid #000; border-bottom: 1px solid #000; text-align: center; margin: 2px 0; padding: 1px 0; font-size: 11px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .token-wrapper { display: flex; justify-content: center; margin: 5px 0 15px 0; }
-              .token-box { border: 1px solid #000; padding: 1px 18px; font-weight: 600; font-size: 12px; background: #fff; }
-              .info-grid { display: grid; grid-template-columns: 80px 10px 1fr; font-size: 11px; margin-bottom: 15px; line-height: 1.25; padding-left: 20px; }
+              .token-box { border: 1px solid #000; padding: 1px 18px; font-weight: 600; font-size: 12px; background: #fff; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+              .info-grid { display: grid; grid-template-columns: 80px 10px 1fr; font-size: 11px; margin-bottom: 15px; line-height: 1.25; padding-left: 20px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .info-label { font-weight: 500; }
               .info-sep { text-align: center; }
               .info-val { font-weight: 500; }
-              .items-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 9.5px; }
+              .items-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 9.5px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .items-table thead th { border-top: 1px dashed #000; border-bottom: 1px dashed #000; text-align: center; padding: 3px 0; font-weight: 800; text-transform: uppercase; }
               .items-table thead th:first-child { text-align: left; padding-left: 5px; }
               .items-table thead th:last-child { padding-right: 5px; }
@@ -130,20 +148,20 @@ const App = () => {
               .col-qty { width: 14%; }
               .col-rate { width: 18%; }
               .col-amt { width: 26%; }
-              .items-table tbody td { padding: 4px 0; vertical-align: top; line-height: 1.1; }
+              .items-table tbody td { padding: 4px 0; vertical-align: top; line-height: 1.1; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .desc-cell { text-align: left; padding-left: 5px; font-weight: 500; }
               .qty-cell { text-align: center; font-weight: 500; }
               .rate-cell { text-align: right; padding-right: 20px; }
               .amt-cell { text-align: right; padding-right: 5px; }
-              .rs-sub { display: block; font-size: 8px; text-align: center; width: 100%; }
+              .rs-sub { display: block; font-size: 8px; text-align: center; width: 100%; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .dashed-separator { width: 100%; border-bottom: 1px dashed #000; margin: 5px 0; }
-              .totals-flex { display: flex; font-size: 11px; margin-top: 5px; line-height: 1.3; }
+              .totals-flex { display: flex; font-size: 11px; margin-top: 5px; line-height: 1.3; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .grand-total-box { display: flex; justify-content: flex-end; margin-right: 5px; margin-top: 5px; }
-              .grand-total-inner { border-top: 1px solid #000; border-bottom: 1px solid #000; display: flex; padding: 2px 0; font-weight: 800; font-size: 13px; width: 150px; }
-              .remarks-row { margin-top: 35px; margin-bottom: 25px; padding-left: 20px; font-weight: 600; font-size: 11px; }
-              .print-info-box { border-top: 1px dashed #000; border-bottom: 1px dashed #000; display: flex; justify-content: space-between; padding: 2px 5px; font-size: 11px; margin-top: 10px; }
-              .powered-by { margin-top: 5px; text-align: center; font-size: 9px; display: flex; align-items: center; justify-content: center; gap: 5px; color: #333; }
-              .cis-logo { font-weight: bold; font-style: italic; display: flex; align-items: center; }
+              .grand-total-inner { border-top: 1px solid #000; border-bottom: 1px solid #000; display: flex; padding: 2px 0; font-weight: 800; font-size: 13px; width: 150px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+              .remarks-row { margin-top: 35px; margin-bottom: 25px; padding-left: 20px; font-weight: 600; font-size: 11px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+              .print-info-box { border-top: 1px dashed #000; border-bottom: 1px dashed #000; display: flex; justify-content: space-between; padding: 2px 5px; font-size: 11px; margin-top: 10px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+              .powered-by { margin-top: 5px; text-align: center; font-size: 9px; display: flex; align-items: center; justify-content: center; gap: 5px; color: #333; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+              .cis-logo { font-weight: bold; font-style: italic; display: flex; align-items: center; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
             </style>
           </head>
           <body>
@@ -156,7 +174,7 @@ const App = () => {
         setTimeout(() => {
           printWindow.print();
           printWindow.close();
-        }, 250);
+        }, 500);
       }
     }
   };
