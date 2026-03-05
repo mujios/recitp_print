@@ -3,6 +3,7 @@ import { Link, Printer, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Analytics } from '@vercel/analytics/react';
 
 interface ReceiptItem {
   id: number;
@@ -913,6 +914,7 @@ const App = () => {
           </div>
         </div>
       </div>
+      <Analytics />
     </div>
   );
 };
