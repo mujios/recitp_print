@@ -55,7 +55,6 @@ const defaultItem: ReceiptItem = {
 
 const App = () => {
   const printRef = useRef<HTMLDivElement>(null);
-  const [imgError, setImgError] = useState(false);
 
   const [receipt, setReceipt] = useState<ReceiptData>({
     addressLine1: "House No. 45D Miran Shah Road near",
