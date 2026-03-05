@@ -34,6 +34,12 @@ interface ReceiptData {
   printDate: string;
   printTime: string;
   printTimeAmPm: string;
+  logoMode: 'text' | 'image';
+  logoText: string;
+  logoImageUrl: string | null;
+  logoFontFamily: string;
+  logoFontSize: number;
+  logoFontWeight: '400' | '500' | '700' | '800' | '900';
 }
 
 const defaultItem: ReceiptItem = {
@@ -80,6 +86,12 @@ const App = () => {
     printDate: "7-2-2026",
     printTime: "6:44",
     printTimeAmPm: "pm",
+    logoMode: 'text',
+    logoText: "mInI mo's",
+    logoImageUrl: null,
+    logoFontFamily: "'Rubik Bubbles'",
+    logoFontSize: 38,
+    logoFontWeight: '700',
   });
 
   const handlePrint = () => {
@@ -87,6 +99,10 @@ const App = () => {
     if (printContent) {
       const printWindow = window.open('', '_blank');
       if (printWindow) {
+        const logoStyleRule = receipt.logoMode === 'text' 
+          ? `.fallback-title { font-family: ${receipt.logoFontFamily} !important; font-size: ${receipt.logoFontSize}px !important; font-weight: ${receipt.logoFontWeight} !important; text-align: center; color: #000; line-height: 1; }`
+          : '';
+
         printWindow.document.write(`
           <!DOCTYPE html>
           <html>
@@ -128,7 +144,7 @@ const App = () => {
               
               .logo-container { display: flex; justify-content: center; margin-bottom: 2px; width: 100%; overflow: hidden; }
               .logo-img { width: 200px; height: auto; filter: grayscale(100%) contrast(150%); mix-blend-mode: multiply; display: block; }
-              .fallback-title { font-family: 'Rubik Bubbles', cursive !important; font-size: 38px; text-align: center; color: #000; line-height: 1; }
+              ${logoStyleRule}
               .tagline { font-family: monospace; font-size: 10px; text-align: center; letter-spacing: 3px; margin-bottom: 5px; }
               .address { text-align: center; font-size: 13px; font-weight: 800; margin-bottom: 5px; line-height: 1.1; padding: 0 15px; font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
               .bill-type-container { padding: 0 5px 2px 5px; margin-bottom: 2px; }
@@ -203,6 +219,36 @@ const App = () => {
     setReceipt(prev => ({
       ...prev,
       items: prev.items.filter(item => item.id !== id)
+    }));
+  };
+
+  const handleLogoImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const imageUrl = event.target?.result as string;
+        setReceipt(prev => ({
+          ...prev,
+          logoImageUrl: imageUrl
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogoImage = () => {
+    setReceipt(prev => ({
+      ...prev,
+      logoImageUrl: null,
+      logoMode: 'text'
+    }));
+  };
+
+  const updateLogoField = (field: 'logoMode' | 'logoText' | 'logoFontFamily' | 'logoFontSize' | 'logoFontWeight', value: any) => {
+    setReceipt(prev => ({
+      ...prev,
+      [field]: value
     }));
   };
 
@@ -458,6 +504,162 @@ const App = () => {
                 <Input value={receipt.addressLine2} onChange={(e) => updateField('addressLine2', e.target.value)} />
               </div>
 
+              {/* Logo Editor Section */}
+              <div className="pt-4 border-t">
+                <h3 className="text-base font-semibold mb-3 text-gray-700">Logo Settings</h3>
+                
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label>Logo Mode</Label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          value="text"
+                          checked={receipt.logoMode === 'text'}
+                          onChange={(e) => updateLogoField('logoMode', e.target.value)}
+                          className="w-4 h-4 mr-2"
+                        />
+                        <span className="text-sm text-gray-700">Text Logo</span>
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="radio"
+                          value="image"
+                          checked={receipt.logoMode === 'image'}
+                          onChange={(e) => updateLogoField('logoMode', e.target.value)}
+                          className="w-4 h-4 mr-2"
+                        />
+                        <span className="text-sm text-gray-700">Image Logo</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {receipt.logoMode === 'text' ? (
+                    <>
+                      <div className="space-y-2">
+                        <Label>Logo Text</Label>
+                        <Input
+                          value={receipt.logoText}
+                          onChange={(e) => updateLogoField('logoText', e.target.value)}
+                          placeholder="Enter logo text"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label>Font Family</Label>
+                        <select
+                          value={receipt.logoFontFamily}
+                          onChange={(e) => updateLogoField('logoFontFamily', e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="Arial">Arial</option>
+                          <option value="Helvetica">Helvetica</option>
+                          <option value="Roboto">Roboto</option>
+                          <option value="Georgia">Georgia</option>
+                          <option value="'Courier New'">Courier New</option>
+                          <option value="'Rubik Bubbles'">Rubik Bubbles</option>
+                          <option value="monospace">Monospace</option>
+                          <option value="serif">Serif</option>
+                          <option value="sans-serif">Sans-serif</option>
+                        </select>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <Label>Font Size (px)</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              type="number"
+                              min="16"
+                              max="60"
+                              value={receipt.logoFontSize}
+                              onChange={(e) => updateLogoField('logoFontSize', parseInt(e.target.value))}
+                              className="flex-1"
+                            />
+                            <input
+                              type="range"
+                              min="16"
+                              max="60"
+                              value={receipt.logoFontSize}
+                              onChange={(e) => updateLogoField('logoFontSize', parseInt(e.target.value))}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label>Font Weight</Label>
+                          <select
+                            value={receipt.logoFontWeight}
+                            onChange={(e) => updateLogoField('logoFontWeight', e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="400">Normal</option>
+                            <option value="500">Medium</option>
+                            <option value="700">Bold</option>
+                            <option value="800">Extra Bold</option>
+                            <option value="900">Black</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-100 p-3 rounded border">
+                        <p className="text-xs text-gray-600 mb-2">Preview:</p>
+                        <div
+                          style={{
+                            fontFamily: receipt.logoFontFamily,
+                            fontSize: `${receipt.logoFontSize}px`,
+                            fontWeight: receipt.logoFontWeight,
+                            textAlign: 'center',
+                            color: '#000',
+                            lineHeight: '1',
+                            minHeight: '60px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          {receipt.logoText}
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        <Label>Upload Logo Image</Label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleLogoImageUpload}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                        />
+                      </div>
+
+                      {receipt.logoImageUrl && (
+                        <div className="space-y-2">
+                          <p className="text-xs text-gray-600">Image Preview:</p>
+                          <img
+                            src={receipt.logoImageUrl}
+                            alt="Logo preview"
+                            className="max-h-32 max-w-full mx-auto rounded border"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            onClick={handleRemoveLogoImage}
+                            className="w-full"
+                          >
+                            Remove Image
+                          </Button>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label>Bill Type</Label>
@@ -574,15 +776,23 @@ const App = () => {
           <div className="bg-gray-400 rounded-lg shadow-md p-6 flex justify-center overflow-auto max-h-[85vh]">
             <div ref={printRef} className="receipt-paper">
               <div className="logo-container">
-                {!imgError ? (
+                {receipt.logoMode === 'image' && receipt.logoImageUrl ? (
                   <img
-                    src="/logos.png"
-                    alt="mini mo's PLAY CAFE"
+                    src={receipt.logoImageUrl}
+                    alt="Custom logo"
                     className="logo-img"
-                    onError={() => setImgError(true)}
                   />
                 ) : (
-                  <div className="fallback-title">mInI mo's</div>
+                  <div
+                    className="fallback-title"
+                    style={{
+                      fontFamily: receipt.logoFontFamily,
+                      fontSize: `${receipt.logoFontSize}px`,
+                      fontWeight: receipt.logoFontWeight
+                    }}
+                  >
+                    {receipt.logoText}
+                  </div>
                 )}
               </div>
 
